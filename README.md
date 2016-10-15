@@ -1,2 +1,2 @@
 # jpmorgan
-Super Simple Stock
+Super Simple Stocks

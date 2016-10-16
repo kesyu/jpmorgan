@@ -137,7 +137,14 @@ public class SuperSimpleStocksImplTest {
 
 		superSimpleStocks.calculateStockPrice(Stock.Symbol.ALE, tradeRecords, currentTime);
 	}
+	
+	@Test(expectedExceptions = IllegalArgumentException.class, dataProvider="tradeRecordListErrorData")
+	public void testCalculateStockPriceWithNoTradeRecord(List<TradeRecord> tradeRecords) {
+		LocalDateTime currentTime = LocalDateTime.of(2016, 10, 16, 10, 50);
 
+		Assert.assertTrue(superSimpleStocks.calculateStockPrice(Stock.Symbol.POP, tradeRecords, currentTime) == -1);
+	}
+	
 	@Test
 	public void testCalculateStockPriceFromRecordedTrades() {
 		LocalDateTime currentTime = LocalDateTime.of(2016, 10, 16, 10, 50);

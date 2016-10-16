@@ -15,6 +15,17 @@ public class Stock {
 		COMMON, PREFERRED
 	}
 
+	public Stock() {}
+
+	public Stock(Symbol symbol, Type type, int lastDividend, float fixedDividend, int parValue) {
+		this.symbol = symbol;
+		this.type = type;
+		this.lastDividend = lastDividend;
+		this.fixedDividend = fixedDividend;
+		this.parValue = parValue;
+	}
+
+
 	public Symbol getSymbol() {
 		return symbol;
 	}

@@ -15,13 +15,15 @@ public class SuperSimpleStocksImpl implements SuperSimpleStocks {
 	private final static Logger logger = Logger.getLogger(SuperSimpleStocks.class);
 
 	@Override
-	public double calculateDividendYield(Stock stock, double price) {
+	public double calculateDividendYield (Stock stock, double price) throws IllegalArgumentException {
 		if (stock == null
 				|| stock.getLastDividend() < 0
 				|| stock.getFixedDividend() < 0
-				|| stock.getParValue() < 0
-				|| price <= 0) {
-			throw new IllegalArgumentException();
+				|| stock.getParValue() < 0) {
+			throw new IllegalArgumentException("Invalid stock was given.");
+		}
+		if (price <= 0) {
+			throw new IllegalArgumentException("Invalid price was given.");
 		}
 		if (Stock.Type.COMMON == stock.getType()) {
 			return stock.getLastDividend() / price;
@@ -33,18 +35,25 @@ public class SuperSimpleStocksImpl implements SuperSimpleStocks {
 	}
 
 	@Override
-	public double calculatePERatio(Stock stock, double price) {
+	public double calculatePERatio(Stock stock, double price) throws IllegalArgumentException {
 		double dividend = this.calculateDividendYield(stock, price);
-		if (dividend <= 0 || price < 0) {
-			throw new IllegalArgumentException();
+		if (dividend <= 0) {
+			throw new IllegalArgumentException("Dividend can not be 0.");
+		}
+		if (price < 0) {
+			throw new IllegalArgumentException("Price is invalid.");
 		}
 		return price / dividend;
 	}
 
 	@Override
-	public double calculateStockPrice(Stock.Symbol stockSymbol, List<TradeRecord> tradeRecords, LocalDateTime currentTime) {
-		if (tradeRecords == null || tradeRecords.isEmpty() || !validTradeRecordListElements(tradeRecords)) {
-			throw new IllegalArgumentException();
+	public double calculateStockPrice(Stock.Symbol stockSymbol, List<TradeRecord> tradeRecords, LocalDateTime currentTime)
+			throws IllegalArgumentException {
+		if (tradeRecords == null || tradeRecords.isEmpty()) {
+			throw new IllegalArgumentException("Invalid trade record list.");
+		}
+		if (!validTradeRecordListElements(tradeRecords)) {
+			throw new IllegalArgumentException("Invalid trade record in the list.");
 		}
 
 		List<TradeRecord> filteredList = tradeRecords.stream()
@@ -63,9 +72,9 @@ public class SuperSimpleStocksImpl implements SuperSimpleStocks {
 	}
 
 	@Override
-	public double calculateGBCEAllShareIndex(List<Stock> stocks, List<TradeRecord> tradeRecords) {
+	public double calculateGBCEAllShareIndex(List<Stock> stocks, List<TradeRecord> tradeRecords) throws IllegalArgumentException {
 		if (stocks.isEmpty()) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Stock list is epmty.");
 		}
 		double tradedStocks = 0;
 		double result = 1;

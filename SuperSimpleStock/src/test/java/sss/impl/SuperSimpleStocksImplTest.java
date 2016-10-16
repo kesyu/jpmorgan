@@ -1,5 +1,11 @@
 package sss.impl;
 
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
@@ -8,6 +14,7 @@ import org.testng.annotations.Test;
 
 import sss.SuperSimpleStocks;
 import sss.bean.Stock;
+import sss.bean.TradeRecord;
 
 public class SuperSimpleStocksImplTest {
 	private SuperSimpleStocks superSimpleStocks;
@@ -91,7 +98,7 @@ public class SuperSimpleStocksImplTest {
 
 	@Test(expectedExceptions = IllegalArgumentException.class, dataProvider="peRatioErrorData")
 	public void testCalculatePERatioWithError(double dividend, double tickerPrice) {
-	    SuperSimpleStocks spySuperSimpleStocks= Mockito.spy(superSimpleStocks);
+	    SuperSimpleStocks spySuperSimpleStocks = Mockito.spy(superSimpleStocks);
 
 	    Mockito.doReturn(dividend).when(spySuperSimpleStocks).calculateDividendYield(Mockito.any(Stock.class), Mockito.anyDouble()); 
 
@@ -103,20 +110,78 @@ public class SuperSimpleStocksImplTest {
 		double dividend = 5.0;
 		double tickerPrice = 2.0;
 		double expected = 0.4;
-	    SuperSimpleStocks spySuperSimpleStocks= Mockito.spy(superSimpleStocks);
+	    SuperSimpleStocks spySuperSimpleStocks = Mockito.spy(superSimpleStocks);
 
 	    Mockito.doReturn(dividend).when(spySuperSimpleStocks).calculateDividendYield(Mockito.any(Stock.class), Mockito.anyDouble()); 
 
 	    Assert.assertTrue(spySuperSimpleStocks.calculatePERatio(stock, tickerPrice) == expected);
 	}
 
-	@Test
-	public void testCalculateStockPriceFromRecordedTrades() {
-		superSimpleStocks.calculateStockPriceFromRecordedTrades();
+	@DataProvider(name="tradeRecordListErrorData")
+	private Object[][] tradeRecordListErrorData() {
+		TradeRecord invalidTradeRecord = new TradeRecord();
+		invalidTradeRecord.setPrice(10);
+		invalidTradeRecord.setQuantityOfShares(2);
+		invalidTradeRecord.setStockSymbol(Stock.Symbol.ALE);
+		return new Object[][] {
+			{null},
+			{Collections.emptyList()},
+			{Arrays.asList(new TradeRecord())},
+			{Arrays.asList(invalidTradeRecord)}
+		};
+	}
+
+	@Test(expectedExceptions = IllegalArgumentException.class, dataProvider="tradeRecordListErrorData")
+	public void testCalculateStockPriceWithError(List<TradeRecord> tradeRecords) {
+		LocalDateTime currentTime = LocalDateTime.of(2016, 10, 16, 10, 50);
+
+		superSimpleStocks.calculateStockPrice(Stock.Symbol.ALE, tradeRecords, currentTime);
 	}
 
 	@Test
-	public void testCalculateGBCEAllShareIndex() {
-		superSimpleStocks.calculateGBCEAllShareIndex();
+	public void testCalculateStockPriceFromRecordedTrades() {
+		LocalDateTime currentTime = LocalDateTime.of(2016, 10, 16, 10, 50);
+		List<TradeRecord> tradeRecords = setupTradeRecordList();
+
+		Assert.assertTrue(superSimpleStocks.calculateStockPrice(Stock.Symbol.ALE, tradeRecords, currentTime) == 4.0);
+	}
+
+	@Test(expectedExceptions = IllegalArgumentException.class)
+	public void testCalculateGBCEAllShareIndexWithError() {
+		List<TradeRecord> tradeRecords = setupTradeRecordList();
+	    superSimpleStocks.calculateGBCEAllShareIndex(Collections.emptyList(), tradeRecords);
+	}
+
+	private List<TradeRecord> setupTradeRecordList() {
+		List<TradeRecord> tradeRecords = new LinkedList<TradeRecord>();
+		TradeRecord tradeRecord1 = new TradeRecord();
+		tradeRecord1.setPrice(2);
+		tradeRecord1.setStockSymbol(Stock.Symbol.ALE);
+		tradeRecord1.setQuantityOfShares(2);
+		tradeRecord1.setTimeStamp(LocalDateTime.of(2016, 10, 16, 10, 55));
+		tradeRecords.add(tradeRecord1);
+
+		TradeRecord tradeRecord2 = new TradeRecord();
+		tradeRecord2.setPrice(4);
+		tradeRecord2.setStockSymbol(Stock.Symbol.GIN);
+		tradeRecord2.setQuantityOfShares(2);
+		tradeRecord2.setTimeStamp(LocalDateTime.of(2016, 10, 16, 10, 55));
+		tradeRecords.add(tradeRecord2);
+
+		TradeRecord tradeRecord3 = new TradeRecord();
+		tradeRecord3.setPrice(6);
+		tradeRecord3.setStockSymbol(Stock.Symbol.ALE);
+		tradeRecord3.setQuantityOfShares(2);
+		tradeRecord3.setTimeStamp(LocalDateTime.of(2016, 10, 16, 10, 45));
+		tradeRecords.add(tradeRecord3);
+
+		TradeRecord tradeRecord4 = new TradeRecord();
+		tradeRecord4.setPrice(8);
+		tradeRecord4.setStockSymbol(Stock.Symbol.ALE);
+		tradeRecord4.setQuantityOfShares(2);
+		tradeRecord4.setTimeStamp(LocalDateTime.of(2016, 10, 16, 10, 20));
+		tradeRecords.add(tradeRecord4);
+
+		return tradeRecords;
 	}
 }

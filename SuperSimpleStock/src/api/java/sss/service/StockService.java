@@ -14,7 +14,7 @@ public class StockService {
 		Stock teaStock = new Stock(Stock.Symbol.TEA, Stock.Type.COMMON, 0, 0, 100);
 		Stock popStock = new Stock(Stock.Symbol.POP, Stock.Type.COMMON, 8, 0, 100);
 		Stock aleStock = new Stock(Stock.Symbol.ALE, Stock.Type.COMMON, 23, 0, 60);
-		Stock ginStock = new Stock(Stock.Symbol.GIN, Stock.Type.PREFERRED, 8, 0, 100);
+		Stock ginStock = new Stock(Stock.Symbol.GIN, Stock.Type.PREFERRED, 8, 0.02f, 100);
 		Stock joeStock = new Stock(Stock.Symbol.JOE, Stock.Type.COMMON, 13, 0, 250);
 		
 		stockList.add(teaStock);
@@ -26,5 +26,9 @@ public class StockService {
 
 	public List<Stock> getStocks() {
 		return stockList;
+	}
+
+	public Stock getStockBySymbol(Stock.Symbol stockSymbol) {
+		return this.getStocks().stream().filter(e -> stockSymbol.equals(e.getSymbol())).findFirst().get();
 	}
 }

@@ -2,22 +2,33 @@ package sss.bean;
 
 import java.time.LocalDateTime;
 
+import sss.bean.Stock.Symbol;
+import sss.service.TradeService;
+import sss.service.TradeService.TradeType;
+
 public class TradeRecord {
-	private TradeType tradeType;
+	private TradeService.TradeType tradeType;
 	private Stock.Symbol stockSymbol;
 	private int quantityOfShares;
 	private int price;
 	private LocalDateTime timeStamp;
 	
-	public static enum TradeType {
-		BUY, SELL
+	public TradeRecord() {}
+	
+	public TradeRecord(TradeType tradeType, Symbol stockSymbol, int quantityOfShares, int price,
+			LocalDateTime timeStamp) {
+		this.tradeType = tradeType;
+		this.stockSymbol = stockSymbol;
+		this.quantityOfShares = quantityOfShares;
+		this.price = price;
+		this.timeStamp = timeStamp;
 	}
 
-	public TradeType getTradeType() {
+	public TradeService.TradeType getTradeType() {
 		return tradeType;
 	}
 
-	public void setTradeType(TradeType tradeType) {
+	public void setTradeType(TradeService.TradeType tradeType) {
 		this.tradeType = tradeType;
 	}
 

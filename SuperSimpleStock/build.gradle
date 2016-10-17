@@ -1,5 +1,11 @@
 apply plugin: "java"
 apply plugin: "maven"
+apply plugin: 'fatjar'
+buildscript {
+  dependencies {
+  classpath 'eu.appsatori:gradle-fatjar-plugin:0.1.3'
+  }
+}
 
 version = 1.0
 
@@ -42,4 +48,19 @@ dependencies {
 jar {
     from sourceSets.api.output
     from sourceSets.impl.output
+
+    manifest {
+        attributes 'Main-Class': 'sss.ApplicationDemo'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.0'
+}
+
+fatJar {
+  classifier 'fat'
+  manifest {
+    attributes 'Main-Class': 'sss.ApplicationDemo'
+  }
 }

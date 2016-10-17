@@ -31,9 +31,11 @@ sourceSets {
 
 dependencies {
     apiCompile 'commons-codec:commons-codec:1.5'
+	apiCompile 'log4j:log4j:1.2.17'
 
     implCompile sourceSets.api.output
     implCompile 'commons-lang:commons-lang:2.6'
+	implCompile 'log4j:log4j:1.2.17'
 
 	testCompile 'org.testng:testng:6.9.13.6'
 	testCompile 'org.mockito:mockito-all:1.9.5'
@@ -41,8 +43,6 @@ dependencies {
     testCompile sourceSets.impl.output
     runtime configurations.apiRuntime
     runtime configurations.implRuntime
-
-    compile 'log4j:log4j:1.2.17'
 }
 
 jar {
@@ -55,7 +55,7 @@ jar {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
+    gradleVersion = '3.1'
 }
 
 fatJar {

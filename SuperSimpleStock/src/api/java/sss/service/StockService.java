@@ -28,6 +28,11 @@ public class StockService {
 		return stockList;
 	}
 
+	/**
+	 * Fetches a stock by using it's stock symbol.
+	 * @param stockSymbol Stock symbol.
+	 * @return Stock, that matches the given stock symbol.
+	 */
 	public Stock getStockBySymbol(Stock.Symbol stockSymbol) {
 		return this.getStocks().stream().filter(e -> stockSymbol.equals(e.getSymbol())).findFirst().get();
 	}

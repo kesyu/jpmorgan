@@ -24,6 +24,13 @@ public class TradeService {
 		return tradeRecords;
 	}
 	
+	/**
+	 * Records a trade, with timestamp, quantity of shares, buy or sell indicator and price.
+	 * @param tradeType Buying, or selling a stock.
+	 * @param stockSymbol Symbol of the traded stock.
+	 * @param quantityOfShares Quantity of shares.
+	 * @param price Price.
+	 */
 	public void tradeStock(TradeType tradeType, Stock.Symbol stockSymbol, int quantityOfShares, int price) {
 		logger.info("Trading Stock: " + tradeType + "ing " + quantityOfShares + " " + stockSymbol + " stock for " + price + ".");
 		TradeRecord tradeRecord = new TradeRecord(tradeType, stockSymbol, quantityOfShares, price, LocalDateTime.now());
